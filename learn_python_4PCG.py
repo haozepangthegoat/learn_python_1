@@ -1,11 +1,13 @@
 """
 06/09/23 haozepangthegoat
 This file is a practice to write data into a python list. I endeavor to avoid using numpy.
+args: ROW_ONLY
 """
 # initialisation
 delimiter = ', '
-array = []
+array = [] # The array that will contain main data
 comments = []
+title = []
 num_comments = 0
 num_column = int
 
@@ -28,7 +30,7 @@ with open('example_data.txt') as file:
 
 with open('example_data.txt') as file:
     # calculates the number of column
-    # returns a n dimension array with n being the number of column
+    # returns an n dimension array with n being the number of column
     for num_lines, line in enumerate(file):
         if num_lines == num_comments - 1:
             break
@@ -40,11 +42,14 @@ with open('example_data.txt') as file:
 with open('example_data.txt') as file:
     for num_line, line in enumerate(file):
         line = line.strip()
-        if num_line >= num_comments:
+        if num_line == num_comments:
+            title = line.split(delimiter)
+        if num_line > num_comments:
             for i in range(0, num_column):
                 pass
                 array[i].append(line.split(delimiter)[i])
 
 print(array)
-print(num_comments)
+print(title)
+# print(num_comments)
 print(comments)
