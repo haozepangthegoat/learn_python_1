@@ -12,6 +12,7 @@ num_comments = 0
 num_column = int
 
 # body
+# input process
 with open('example_data.txt') as file:
     # returns the number of lines of comments
     for line in file:
@@ -21,16 +22,14 @@ with open('example_data.txt') as file:
             num_comments += 1
 
 with open('example_data.txt') as file:
-    pass
+    # reading comments
     for num_lines, line in enumerate(file):
-        pass
         if num_lines < num_comments:
-            pass
-            comments.append(line)
+            comments.append(line.strip('%\n '))
 
 with open('example_data.txt') as file:
-    # calculates the number of column
-    # returns an n dimension array with n being the number of column
+    # calculates num_column
+    # returns n-D array (with n being the number of column)
     for num_lines, line in enumerate(file):
         if num_lines == num_comments - 1:
             break
@@ -40,6 +39,7 @@ with open('example_data.txt') as file:
     array = [[] for i in range(num_column)]
 
 with open('example_data.txt') as file:
+    # reading actual data
     for num_line, line in enumerate(file):
         line = line.strip()
         if num_line == num_comments:
@@ -53,3 +53,35 @@ print(array)
 print(title)
 # print(num_comments)
 print(comments)
+
+# output process
+with open('output.tex', 'r+') as file:
+    file.write('\\documentclass{article} \n')
+    file.write('\\usepackage{booktabs} \n')
+    file.write('\\begin{document} \n')
+    file.write('\\begin{table}[h] \n')
+    file.write('\\centering\n')
+    # tabular
+    file.write(f'\\begin{{tabular}}{{*{{{num_column}}}cr}} \n')
+    file.write('\\toprule[1.5pt]\n')
+    # writing title
+    for i in range(len(title)):
+        file.write('\\bfseries  ')
+        file.write(f'{title[i]}&')
+    file.write('\\\\ \n')
+    file.write('\\midrule')
+    # writing data
+    for n in range(len(array[i])):
+        pass
+        for i in range(num_column):
+            file.write(f'{array[i][n]}&')
+
+        file.write('\\\\ \n')
+
+    file.write('\\bottomrule[1.5pt]\n')
+    file.write('\\end{tabular}\n')
+
+    file.write(f'\\caption{{{comments[1]}}}')
+
+    file.write('\\end{table}\n')
+    file.write('\\end{document} \n')
