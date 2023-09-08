@@ -3,8 +3,13 @@
 This file is a practice to write data into a python list. I endeavor to avoid using numpy.
 args: ROW_ONLY
 """
-# initialisation
+# TODO: Fine tuning LaTeX code
+# TODO: Fine tuning this process
+import subprocess
+# parameters
 delimiter = ', '
+file_name = 'example_data.txt'
+# initialisation
 array = [] # The array that will contain main data
 comments = []
 title = []
@@ -13,7 +18,7 @@ num_column = int
 
 # body
 # input process
-with open('example_data.txt') as file:
+with open(f'{file_name}') as file:
     # returns the number of lines of comments
     for line in file:
         pass
@@ -21,13 +26,13 @@ with open('example_data.txt') as file:
         if test == '%':
             num_comments += 1
 
-with open('example_data.txt') as file:
+with open(f'{file_name}') as file:
     # reading comments
     for num_lines, line in enumerate(file):
         if num_lines < num_comments:
             comments.append(line.strip('%\n '))
 
-with open('example_data.txt') as file:
+with open(f'{file_name}') as file:
     # calculates num_column
     # returns n-D array (with n being the number of column)
     for num_lines, line in enumerate(file):
@@ -38,7 +43,7 @@ with open('example_data.txt') as file:
     )
     array = [[] for i in range(num_column)]
 
-with open('example_data.txt') as file:
+with open(f'{file_name}') as file:
     # reading actual data
     for num_line, line in enumerate(file):
         line = line.strip()
@@ -80,8 +85,11 @@ with open('output.tex', 'r+') as file:
 
     file.write('\\bottomrule[1.5pt]\n')
     file.write('\\end{tabular}\n')
-
+    # writing comments
     file.write(f'\\caption{{{comments[1]}}}')
-
     file.write('\\end{table}\n')
     file.write('\\end{document} \n')
+# Replace 'MyApp' with the name of the application you want to open.
+app_name = "Texifier"
+# Use subprocess to open the application.
+subprocess.run(["open", "-a", app_name])
