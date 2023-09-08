@@ -12,11 +12,11 @@ delimiter = ', '
 input_file_name = 'example_data.txt'
 output_file_name = 'output.tex'
 # initialisation
-array = []  # The array that will contain main data
-comments = []
 num_comments = 0
-title = []
+comments = []
 num_column = int
+array = []  # The array that will contain main data
+title = []
 
 
 # body
@@ -46,6 +46,11 @@ def read_comments():
 
 
 def read_data():
+    """
+    Purpose: read data into
+             read the title of each column
+    Returns: None
+    """
     pass
     global num_column
     global array
@@ -74,13 +79,20 @@ def read_data():
 
 
 def input_process():
+    """
+    Purpose: read data from a file
+    Returns: None
+    """
     pass
     read_comments()
     read_data()
 
 
-# output process
 def output_process():
+    """
+    Purpose: write data into a LaTeX file
+    Returns: None
+    """
     global output_file_name
     global array
     with open(f'{output_file_name}', 'r+') as file:
@@ -136,4 +148,3 @@ if __name__ == '__main__':
     print(title)
     print(num_comments)
     print(comments)
-
