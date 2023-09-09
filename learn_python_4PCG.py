@@ -7,144 +7,136 @@ args: ROW_ONLY
 # TODO: Fine tuning this process
 import subprocess
 
-# parameters
-delimiter = ', '
-input_file_name = 'example_data.txt'
-output_file_name = 'output.tex'
-# initialisation
-num_comments = 0
-comments = []
-num_column = int
-array = []  # The array that will contain main data
-title = []
 
+class File:
+    # initialisation
+    num_comments = 0
+    comments = []
+    num_column = 0
+    array = []  # The array that will contain main data
+    title = []
 
-# body
-# input process
-def read_comments():
-    """
-    Purpose: calculate the number of lines of comments
-    Returns: None
-    """
-    pass
-    global input_file_name
-    global num_comments
-    global comments
-    with open(f'{input_file_name}') as file:
-        # calculates num_comments
-        for line in file:
-            pass
-            test = line.split()[0]
-            if test == '%':
-                num_comments += 1
+    def __init__(self, INPUT_FILE_NAME='example_data.txt', DELIMITER=', ', OUTPUT_FILE_NAME='output.tex'):
+        self.input_file_name = INPUT_FILE_NAME
+        self.delimiter = DELIMITER
+        self.output_file_name = OUTPUT_FILE_NAME
 
-    with open(f'{input_file_name}') as file:
-        # reading comments
-        for num_lines, line in enumerate(file):
-            if num_lines < num_comments:
-                comments.append(line.strip('%\n '))
+    # body
+    # input process
+    def cal_num_comments(self):
+        """
+        Purpose: calculate the number of lines of comments
+        Returns:
 
+        """
+        with open(f'{self.input_file_name}') as file:
+            # calculates num_comments
+            for line in file:
+                pass
+                test = line.split()[0]
+                if test == '%':
+                    self.num_comments += 1
 
-def read_data():
-    """
-    Purpose: read data into
-             read the title of each column
-    Returns: None
-    """
-    pass
-    global num_column
-    global array
-    global title
-    with open(f'{input_file_name}') as file:
-        # calculates num_column
-        # returns n-D array (with n being the number of column)
-        for num_lines, line in enumerate(file):
-            if num_lines == num_comments - 1:
-                break
-        num_column = len(
-            file.readline().split(delimiter)
-        )
-        array = [[] for i in range(num_column)]
+    def read_comments(self):
+        """
+        Purpose: read comments
+        Returns: None
+        """
+        self.cal_num_comments()
+        with open(f'{self.input_file_name}') as file:
+            for num_lines, line in enumerate(file):
+                if num_lines < self.num_comments:
+                   self.comments.append(line.strip('%\n '))
 
-    with open(f'{input_file_name}') as file:
-        # reading actual data
-        for num_line, line in enumerate(file):
-            line = line.strip()
-            if num_line == num_comments:
-                title = line.split(delimiter)
-            if num_line > num_comments:
-                for i in range(0, num_column):
-                    pass
-                    array[i].append(line.split(delimiter)[i])
+    def read_data(self):
+        """
+        Purpose: read data
+                 read the title of each column
+        Returns: None
+        """
+        with open(f'{self.input_file_name}') as file:
+            # read num_column
+            # returns n-D array (with n being the number of column)
+            for num_lines, line in enumerate(file):
+                if num_lines == self.num_comments - 1:
+                    break
+            self.num_column = len(
+                file.readline().split(self.delimiter)
+            )
+            self.array = [[] for i in range(self.num_column)]
 
+        with open(f'{self.input_file_name}') as file:
+            # reading actual data
+            for num_line, line in enumerate(file):
+                line = line.strip()
+                if num_line == self.num_comments:
+                    self.title = line.split(self.delimiter)
+                if num_line > self.num_comments:
+                    for i in range(0, self.num_column):
+                        pass
+                        self.array[i].append(line.split(self.delimiter)[i])
 
-def input_process():
-    """
-    Purpose: read data from a file
-    Returns: None
-    """
-    pass
-    read_comments()
-    read_data()
+    def input_process(self):
+        """
+        Purpose: read data from a file
+        Returns: None
+        """
+        pass
+        self.read_comments()
+        self.read_data()
 
-
-def output_process():
-    """
-    Purpose: write data into a LaTeX file
-    Returns: None
-    """
-    global output_file_name
-    global array
-    with open(f'{output_file_name}', 'r+') as file:
-        # preamble
-        file.write('\\documentclass{article} \n')
-        file.write('\\usepackage{booktabs} \n')
-        # document
-        file.write('\\begin{document} \n')
-        # table
-        file.write('\\begin{table}[h] \n')
-        file.write('\\centering\n')
-        # tabular
-        file.write(f'\\begin{{tabular}}{{*{{{num_column}}}cr}} \n')
-        file.write('\\toprule[1.5pt]\n')
-        # row title
-        for i in range(len(title)):
-            file.write('\\bfseries  ')
-            file.write(f'{title[i]}&')
-        file.write('\\\\ \n')
-        file.write('\\midrule')
-        # data
-        for n in range(len(array[i])):
-            pass
-            for i in range(num_column):
-                file.write(f'{array[i][n]}&')
+    def output_process(self):
+        """
+        Purpose: write data into a LaTeX file
+        Returns: None
+        """
+        with open(f'{self.output_file_name}', 'r+') as file:
+            # preamble
+            file.write('\\documentclass{article} \n')
+            file.write('\\usepackage{booktabs} \n')
+            # document
+            file.write('\\begin{document} \n')
+            # table
+            file.write('\\begin{table}[h] \n')
+            file.write('\\centering\n')
+            # tabular
+            file.write(f'\\begin{{tabular}}{{*{{{self.num_column}}}cr}} \n')
+            file.write('\\toprule[1.5pt]\n')
+            # row title
+            for i in range(len(self.title)):
+                file.write('\\bfseries  ')
+                file.write(f'{self.title[i]}&')
             file.write('\\\\ \n')
-        file.write('\\bottomrule[1.5pt]\n')
-        file.write('\\end{tabular}\n')
-        # comments
-        file.write(f'\\caption{{{comments[1]}}}')
-        file.write('\\end{table}\n')
-        file.write('\\end{document} \n')
+            file.write('\\midrule')
+            # data
+            for n in range(len(self.array[0])):
+                pass
+                for i in range(self.num_column):
+                    file.write(f'{self.array[i][n]}&')
+                file.write('\\\\ \n')
+            file.write('\\bottomrule[1.5pt]\n')
+            file.write('\\end{tabular}\n')
+            # comments
+            file.write(f'\\caption{{{self.comments[1]}}}')
+            file.write('\\end{table}\n')
+            file.write('\\end{document} \n')
 
+    def open_app(self):
+        """
+        Purpose: opens an app
+        Returns: None
+        """
+        # Replace 'MyApp' with the name of the application you want to open.
+        app_name = "Texifier"
+        # Use subprocess to open the application.
+        subprocess.run(["open", "-a", app_name])
 
-def open_pdf():
-    pass
-    # Replace 'MyApp' with the name of the application you want to open.
-    app_name = "Texifier"
-    # Use subprocess to open the application.
-    subprocess.run(["open", "-a", app_name])
+    def make_table(self):
+        """
+        Purpose: make a table from the data
+        Returns:
 
-
-def main():
-    pass
-    input_process()
-    output_process()
-    open_pdf()
-
-
-if __name__ == '__main__':
-    main()
-    print(array)
-    print(title)
-    print(num_comments)
-    print(comments)
+        """
+        self.input_process()
+        self.output_process()
+        self.open_app()
